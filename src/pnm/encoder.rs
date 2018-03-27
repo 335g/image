@@ -316,6 +316,7 @@ impl<'a> CheckedDimensions<'a> {
             ColorType::Palette(_)
             | ColorType::RGB(_) => 3,
             ColorType::RGBA(_) => 4,
+            _ => panic!("No support color type"),
         };
 
         match self.unchecked.header {
@@ -398,6 +399,7 @@ impl<'a> CheckedHeaderColor<'a> {
             | ColorType::RGB(n)
             | ColorType::RGBA(n)
                 => (1 << n) - 1,
+            _ => panic!("No supported color type"),
         };
 
         // Avoid the performance heavy check if possible, e.g. if the header has been chosen by us.

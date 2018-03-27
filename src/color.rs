@@ -22,7 +22,8 @@ pub enum ColorType {
 
     /// Pixel is RGB with an alpha channel
     RGBA(u8),
-
+    
+    CMYK(u8),
 }
 
 /// Returns the number of bits contained in a pixel of `ColorType` ```c```
@@ -32,6 +33,7 @@ pub fn bits_per_pixel(c: ColorType) -> usize {
         ColorType::GrayA(n)   => 2 * n as usize,
         ColorType::RGB(n) | ColorType::Palette(n) => 3 * n as usize,
         ColorType::RGBA(n)    => 4 * n as usize,
+        ColorType::CMYK(n)    => 4 * n as usize,
     }
 }
 
@@ -42,6 +44,7 @@ pub fn num_components(c: ColorType) -> usize {
         ColorType::GrayA(_)   => 2,
         ColorType::RGB(_) | ColorType::Palette(_) => 3,
         ColorType::RGBA(_)    => 4,
+        ColorType::CMYK(_)    => 4,
     }
 }
 

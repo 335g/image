@@ -134,6 +134,7 @@ impl From<ColorType> for (png::ColorType, png::BitDepth) {
             ColorType::Palette(bits) => (Indexed, bits),
             ColorType::GrayA(bits) => (GrayscaleAlpha, bits),
             ColorType::RGBA(bits) => (RGBA, bits),
+            _ => panic!("No supported color type"),
         };
         (ct, png::BitDepth::from_u8(bits).unwrap())
     }

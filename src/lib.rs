@@ -25,7 +25,8 @@ pub use color::ColorType::{
     RGB,
     Palette,
     GrayA,
-    RGBA
+    RGBA,
+    CMYK
 };
 
 pub use color::{
