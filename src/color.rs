@@ -23,6 +23,7 @@ pub enum ColorType {
     /// Pixel is RGB with an alpha channel
     RGBA(u8),
     
+    /// Pixel contains C, M, Y and K channels
     CMYK(u8),
 }
 

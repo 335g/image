@@ -124,7 +124,7 @@ fn rev_hpredict(image: DecodingResult, size: (u32, u32), color_type: ColorType) 
     let samples = match color_type {
         ColorType::Gray(8) | ColorType::Gray(16) => 1,
         ColorType::RGB(8) | ColorType::RGB(16) => 3,
-        ColorType::RGBA(8) | ColorType::RGBA(16) => 4,
+        ColorType::RGBA(8) | ColorType::RGBA(16) | ColorType::CMYK(8) => 4,
         _ => return Err(ImageError::UnsupportedError(format!(
             "Horizontal predictor for {:?} is unsupported.", color_type
         )))
@@ -194,6 +194,14 @@ impl<R: Read + Seek> TIFFDecoder<R> {
     /// accessor for image height.
     pub fn height(&self) -> u32 {
         self.height
+    }
+
+    pub fn bits_per_sample(&self) -> &Vec<u8> {
+        &self.bits_per_sample
+    }
+
+    pub fn samples(&self) -> u8 {
+        self.samples
     }
 
     /// Reads in the next image.
@@ -409,7 +417,8 @@ impl<R: Read + Seek> TIFFDecoder<R> {
         };
         Ok(match (color_type, buffer) {
             (ColorType:: RGB(8), DecodingBuffer::U8(ref mut buffer)) |
-            (ColorType::RGBA(8), DecodingBuffer::U8(ref mut buffer)) => {
+            (ColorType::RGBA(8), DecodingBuffer::U8(ref mut buffer)) |
+            (ColorType::CMYK(8), DecodingBuffer::U8(ref mut buffer)) => {
                 try!(reader.read(&mut buffer[..bytes]))
             }
             (ColorType::RGBA(16), DecodingBuffer::U16(ref mut buffer)) |
@@ -459,6 +468,7 @@ impl<R: Read + Seek> ImageDecoder for TIFFDecoder<R> {
             PhotometricInterpretation::RGB if self.bits_per_sample == [16, 16, 16] => Ok(ColorType::RGB(16)),
             PhotometricInterpretation::BlackIsZero | PhotometricInterpretation::WhiteIsZero
                                            if self.bits_per_sample.len() == 1 => Ok(ColorType::Gray(self.bits_per_sample[0])),
+            PhotometricInterpretation::CMYK if self.bits_per_sample == [8, 8, 8, 8] => Ok(ColorType::CMYK(8)),
 
             _ => Err(::image::ImageError::UnsupportedError(format!(
                 "{:?} with {:?} bits per sample is unsupported", self.bits_per_sample, self.photometric_interpretation
