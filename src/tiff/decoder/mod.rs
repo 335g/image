@@ -186,6 +186,16 @@ impl<R: Read + Seek> TIFFDecoder<R> {
         self.next_image()
     }
 
+    /// accessor for image width.
+    pub fn width(&self) -> u32 {
+        self.width
+    }
+
+    /// accessor for image height.
+    pub fn height(&self) -> u32 {
+        self.height
+    }
+
     /// Reads in the next image.
     /// If there is no further image in the TIFF file a format error is returned.
     /// To determine whether there are more images call `TIFFDecoder::more_images` instead.
