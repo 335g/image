@@ -316,6 +316,8 @@ impl<'a> CheckedDimensions<'a> {
             ColorType::Palette(_)
             | ColorType::RGB(_) => 3,
             ColorType::RGBA(_) => 4,
+            ColorType::CMYK(_) => return Err(io::Error::new(
+                io::ErrorKind::InvalidInput, "Not support ColorType::CMYK")),
         };
 
         match self.unchecked.header {
@@ -392,6 +394,10 @@ impl<'a> CheckedHeaderColor<'a> {
                 => return Err(io::Error::new(
                     io::ErrorKind::InvalidInput,
                     "Encoding colors with a bit depth greater 16 not supported")),
+            | ColorType::CMYK(_) 
+                => return Err(io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    "Not support ColorType::CMYK")),
             ColorType::Gray(n)
             | ColorType::GrayA(n)
             | ColorType::Palette(n)
